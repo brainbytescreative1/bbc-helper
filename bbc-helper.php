@@ -1,6 +1,6 @@
 <?php
 /**
- * BBC Custom Snippets
+ * BBC Helper
  *
  * @package       BBC
  * @author        Brain Bytes Creative
