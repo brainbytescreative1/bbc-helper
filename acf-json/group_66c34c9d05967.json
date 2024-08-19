@@ -4,8 +4,8 @@
     "fields": [
         {
             "key": "field_66c34c9e27184",
-            "label": "Add Schema",
-            "name": "add_schema",
+            "label": "Schema Format",
+            "name": "schema_format",
             "aria-label": "",
             "type": "button_group",
             "instructions": "",
@@ -17,13 +17,74 @@
                 "id": ""
             },
             "choices": {
-                "upload": "Upload JSON",
-                "code": "Paste Code"
+                "JSON Upload": "JSON Upload",
+                "Paste Code": "Paste Code"
             },
             "default_value": "",
             "return_format": "value",
-            "allow_null": 0,
+            "allow_null": 1,
             "layout": "horizontal"
+        },
+        {
+            "key": "field_66c3b4ac04fa2",
+            "label": "Upload Schema JSON",
+            "name": "upload_schema_json",
+            "aria-label": "",
+            "type": "file",
+            "instructions": "Upload JSON file WITHOUT opening and closing <script> tags.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_66c34c9e27184",
+                        "operator": "==",
+                        "value": "JSON Upload"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "uploader": "",
+            "return_format": "array",
+            "min_size": "",
+            "max_size": "",
+            "mime_types": "",
+            "library": "all"
+        },
+        {
+            "key": "field_66c3b4e704fa3",
+            "label": "Paste Schema Code",
+            "name": "paste_schema_code",
+            "aria-label": "",
+            "type": "acfe_code_editor",
+            "instructions": "Paste JSON code WITHOUT opening and closing <script> tags.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_66c34c9e27184",
+                        "operator": "==",
+                        "value": "Paste Code"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "mode": "application\/x-json",
+            "lines": 1,
+            "indent_unit": 4,
+            "maxlength": "",
+            "rows": 4,
+            "max_rows": "",
+            "return_format": []
         }
     ],
     "location": [
@@ -48,9 +109,8 @@
     "acfe_autosync": [
         "json"
     ],
-    "acfe_permissions": "",
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1724075339
+    "modified": 1724101945
 }
