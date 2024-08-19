@@ -29,7 +29,7 @@ if ( class_exists('acf') ) {
         add_filter('includes/acf/settings/load_json', 'bbc_acf_json_load_point');
         function bbc_acf_json_load_point( $paths ) {
             unset($paths[0]);
-            $paths[] = plugin_dir_path( __FILE__ ) . '/acf-json';
+            $paths[] = plugin_dir_path( __FILE__ ) . 'acf-json';
             return $paths;    
         }
         add_filter( 'acf/settings/load_json', 'bbc_acf_json_load_point' );
