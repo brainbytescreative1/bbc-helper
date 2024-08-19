@@ -24,7 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 // acf load functions
 if ( class_exists('acf') ) {
-
     // load json
     if ( ! function_exists('bbc_acf_json_load_point') ) {
         add_filter('includes/acf/settings/load_json', 'bbc_acf_json_load_point');
@@ -43,7 +42,6 @@ if ( class_exists('acf') ) {
         }
         add_filter( 'acf/settings/save_json', 'bbc_acf_json_save_point' );
     }
-
 }
 
 // plugin functions
@@ -51,6 +49,7 @@ if ( ! function_exists('bbc_helper_theme_functions') ) {
     function bbc_helper_theme_functions(){
         $include_files = Array(
             '/functions/schema.php',
+            '/functions/shortcodes.php',
         );
 
         if ( $include_files ) {
