@@ -1,19 +1,19 @@
 <?php
 
+// get year
+if ( ! function_exists('bbc_year_shortcode') ) {
+    function bbc_year_shortcode() {
+        return date('Y');
+    }
+    add_shortcode( 'year', 'bbc_year_shortcode' );
+}
+
 // site name
 if ( ! function_exists('bbc_site_name_shortcode') ) {
     function bbc_site_name_shortcode() {
         return get_bloginfo('name');
     }
     add_shortcode( 'bbc_site_name', 'bbc_site_name_shortcode' );
-}
-
-// get year
-if ( ! function_exists('bbc_year_shortcode') ) {
-    function bbc_year_shortcode() {
-        return date('Y');
-    }
-    add_shortcode( 'bbc_year', 'bbc_year_shortcode' );
 }
 
 // get bbc attribution
