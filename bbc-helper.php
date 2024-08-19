@@ -22,7 +22,7 @@
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-/*** acf load functions ***/
+// acf load functions
 if ( class_exists('acf') ) {
 
     // load json
@@ -46,7 +46,7 @@ if ( class_exists('acf') ) {
 
 }
 
-/*** plugin functions ***/
+// plugin functions
 if ( ! function_exists('bbc_helper_theme_functions') ) {
     function bbc_helper_theme_functions(){
         $include_files = Array(
