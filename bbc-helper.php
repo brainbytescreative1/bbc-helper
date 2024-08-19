@@ -15,6 +15,7 @@
  * Author URI:    https://www.brainbytescreative.com/
  * Text Domain:   bbc-helper
  * Domain Path:   /languages
+ * Requires Plugins: acf-extended, advanced-custom-fields-pro
  * GitHub Plugin URI: https://github.com/brainbytescreative1/bbc-helper
 **/
 
@@ -46,6 +47,26 @@ if ( class_exists('acf') ) {
 }
 
 /*** plugin functions ***/
-if ( class_exists('acf') ) {
+if ( ! function_exists('bbc_helper_theme_functions') ) {
+    function bbc_helper_theme_functions(){
+        $include_files = Array(
+            '/functions/schema.php',
+        );
 
+        if ( $include_files ) {
+            foreach ($include_files as $file) {
+                if(file_exists(__DIR__ . $file)) {
+                    include_once(__DIR__ . $file);
+                }
+            }
+        }
+    }
+    add_action( 'init', 'bbc_helper_theme_functions' );
+}
+
+// schema
+if ( class_exists('acf') ) {
+    if ( function_exists('bbc_get_page_schema') ) {
+        add_action( 'init', 'bbc_get_page_schema' );
+    }
 }

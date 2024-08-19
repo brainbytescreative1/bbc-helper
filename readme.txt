@@ -1,4 +1,4 @@
-=== BBC Custom Snippets ===
+=== BBC Helper ===
 Author URI: https://www.brainbytescreative.com/
 Plugin URI: https://www.brainbytescreative.com/
 Donate link: 
