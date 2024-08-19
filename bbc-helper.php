@@ -63,10 +63,3 @@ if ( ! function_exists('bbc_helper_theme_functions') ) {
     }
     add_action( 'init', 'bbc_helper_theme_functions' );
 }
-
-// schema
-if ( class_exists('acf') ) {
-    if ( function_exists('bbc_get_page_schema') ) {
-        add_action( 'init', 'bbc_get_page_schema' );
-    }
-}
