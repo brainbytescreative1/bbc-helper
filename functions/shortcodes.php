@@ -43,3 +43,10 @@ if ( ! function_exists('bbc_copyright_shortcode') ) {
     }
     add_shortcode( 'bbc_copyright', 'bbc_copyright_shortcode' );
 }
+
+if ( ! function_exists('bbc_populate_gtm_shortcode') ) {
+    function bbc_populate_gtm_shortcode() {
+        return null;
+    }
+    add_shortcode( 'bbc_populate_gtm', 'bbc_populate_gtm_shortcode' );
+}
