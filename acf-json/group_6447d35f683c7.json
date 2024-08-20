@@ -1,11 +1,11 @@
 {
-    "key": "group_66c3720ad2e26",
-    "title": "Global Schema",
+    "key": "group_6447d35f683c7",
+    "title": "Post Schema",
     "fields": [
         {
-            "key": "field_66c3720b9adc6",
-            "label": "Global Schema",
-            "name": "global_schema",
+            "key": "field_6447d35f6f9af",
+            "label": "Schema",
+            "name": "post_schema_repeater",
             "aria-label": "",
             "type": "repeater",
             "instructions": "",
@@ -16,7 +16,8 @@
                 "class": "",
                 "id": ""
             },
-            "layout": "table",
+            "acfe_repeater_stylised_button": 1,
+            "layout": "block",
             "pagination": 0,
             "min": 0,
             "max": 0,
@@ -25,9 +26,9 @@
             "rows_per_page": 20,
             "sub_fields": [
                 {
-                    "key": "field_66c3721b9adc7",
-                    "label": "Global Schema Module",
-                    "name": "global_schema_module",
+                    "key": "field_6447d35f72272",
+                    "label": "Schema Module",
+                    "name": "schema_module",
                     "aria-label": "",
                     "type": "clone",
                     "instructions": "",
@@ -41,32 +42,31 @@
                     "clone": [
                         "group_66c34c9d05967"
                     ],
-                    "display": "group",
+                    "display": "seamless",
                     "layout": "block",
                     "prefix_label": 0,
-                    "prefix_name": 1,
-                    "acfe_seamless_style": 1,
+                    "prefix_name": 0,
+                    "acfe_seamless_style": 0,
                     "acfe_clone_modal": 0,
                     "acfe_clone_modal_close": 0,
                     "acfe_clone_modal_button": "",
                     "acfe_clone_modal_size": "large",
-                    "parent_repeater": "field_66c3720b9adc6"
+                    "parent_repeater": "field_6447d35f6f9af"
                 }
-            ],
-            "acfe_repeater_stylised_button": 0
+            ]
         }
     ],
     "location": [
         [
             {
-                "param": "options_page",
+                "param": "post_type",
                 "operator": "==",
-                "value": "schema"
+                "value": "all"
             }
         ]
     ],
     "menu_order": 0,
-    "position": "normal",
+    "position": "side",
     "style": "default",
     "label_placement": "left",
     "instruction_placement": "label",
@@ -81,5 +81,5 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1724164176
+    "modified": 1724168807
 }
