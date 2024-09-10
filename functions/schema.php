@@ -45,14 +45,15 @@ if ( class_exists('acf') ) {
         function bbc_add_page_schema_to_header(){
 
             global $post;
-            $id = $post->ID;
+            if ( $post ) {
+                $id = $post->ID;
 
-            // global schema
-            echo bbc_get_schema(get_field('schema_repeater', 'schema'));
-            
-            // page schema
-            echo bbc_get_schema(get_field('post_schema_repeater', $id));
-            
+                // global schema
+                echo bbc_get_schema(get_field('schema_repeater', 'schema'));
+                
+                // page schema
+                echo bbc_get_schema(get_field('post_schema_repeater', $id));
+            }
         }
     }
 
