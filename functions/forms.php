@@ -2,8 +2,8 @@
 
 if ( class_exists( 'GFCommon' ) ) {
 
-    // add GTM fields
-    function bbc_create_gtm_fields_shortcode() {
+    // add UTM fields
+    function bbc_create_utm_fields_shortcode() {
 
         // get all forms
         $forms_list = GFAPI::get_forms();
@@ -20,7 +20,7 @@ if ( class_exists( 'GFCommon' ) ) {
                     $form_fields[] = $field->label;
                 }
 
-                $new_form_fields = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
+                $new_form_fields = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_gclid'];
 
                 // add new fields
                 foreach ( $new_form_fields as $new_form_field ) {
@@ -32,7 +32,7 @@ if ( class_exists( 'GFCommon' ) ) {
                             }
                         }
                         $new_field_id++;
-                        $properties['type'] = 'text';
+                        $properties['type'] = 'hidden';
                         $field = GF_Fields::create( $properties );
                         $field->id = $new_field_id;
                         $field->label = $new_form_field;
@@ -49,16 +49,16 @@ if ( class_exists( 'GFCommon' ) ) {
         }
 
     }
-    add_shortcode( 'bbc_create_gtm_fields', 'bbc_create_gtm_fields_shortcode' );
+    add_shortcode( 'bbc_create_utm_fields', 'bbc_create_utm_fields_shortcode' );
 
-    function bbc_populate_gtm_shortcode() {
+    // create cookie
+    function bbc_create_utm_cookie_shortcode() {
+
         // start content
-        ob_start();
-        
-        ?>
+        ob_start(); ?>
 
         <!-- store cookie -->
-        <script>
+        <script type="text/javascript" id="bbcCreateCookie">
             function getQueryParam(url, param) {
 
                 let queryString = url.split('?')[1];
@@ -81,31 +81,49 @@ if ( class_exists( 'GFCommon' ) ) {
                     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
                     expires = "; expires=" + date.toUTCString();
                 }
-                document.cookie = name + "=" + (value || "") + expires + "; path=/";
+
+                let sameSite = " SameSite=None; ";
+
+                document.cookie = name + "=" + (value || "") + expires + sameSite + "; path=/";
             }
 
             function storeUtmParameters() {
-                let utmParams = ['utm_id', 'utm_source', 'utm_medium', 'utm_name', 'utm_term', 'utm_campaign', 'utm_content'];
+                let utmParams = ['utm_id', 'utm_source', 'utm_medium', 'utm_name', 'utm_term', 'utm_campaign', 'utm_content', 'utm_gclid'];
                 let eventData = {};
-
                 for (let i = 0; i < utmParams.length; i++) {
                     let paramValue = getQueryParam(window.location.href, utmParams[i]);
                     if (paramValue) {
                     eventData[utmParams[i]] = paramValue;
                     }
                 }
-
                 if (Object.keys(eventData).length > 0) {
                     setCookie('bbcCookie', JSON.stringify(eventData), 30); // Store cookie for 30 days
                 }
             }
-
             storeUtmParameters();
-
         </script>
+        <?php
+
+        $content = ob_get_clean();
+        return $content;
+
+    }
+    add_shortcode( 'bbc_create_utm_cookie', 'bbc_create_utm_cookie_shortcode' );
+
+    // populate utm fields
+    function bbc_populate_utm_shortcode($atts) {
+
+        $default_atts = array(
+            "debug" => 'false'
+        );
+        $params = shortcode_atts( $default_atts, $atts );
+
+        // start content
+        ob_start();
+        ?>
 
         <!-- get cookie -->
-        <script>
+        <script type="text/javascript" id="bbcGetCookie">
             function getCookie(cname) {
                 let name = cname + "=";
                 let decodedCookie = decodeURIComponent(document.cookie);
@@ -124,7 +142,7 @@ if ( class_exists( 'GFCommon' ) ) {
         </script>
 
         <!-- parse cookie -->
-        <script>
+        <script type="text/javascript" id="bbcParseCookie">
             function cookieParser(cookieString) {
                 if (cookieString === "") {
                     return {};
@@ -142,7 +160,7 @@ if ( class_exists( 'GFCommon' ) ) {
         </script>
 
         <!-- UTM script -->
-        <script>
+        <script type="text/javascript" id="bbcGetUTM">
 
             let utm_id = null;
             let utm_source = null;
@@ -151,8 +169,12 @@ if ( class_exists( 'GFCommon' ) ) {
             let utm_term = null;
             let utm_campaign = null;
             let utm_content = null;
+            let utm_gclid = null;
 
             let myCookie = getCookie("bbcCookie");
+            <?php if ( $params['debug'] === 'true' ) { ?>
+                console.log(myCookie);
+            <?php } ?>
 
             let hasParameters = null;
 
@@ -191,6 +213,7 @@ if ( class_exists( 'GFCommon' ) ) {
                 utm_term = getUrlParameter('utm_term');
                 utm_campaign = getUrlParameter('utm_campaign');
                 utm_content = getUrlParameter('utm_content');
+                utm_gclid = getUrlParameter('utm_gclid');
             } else if ( myCookie ) {
                 // remove characters from cookie
                 myCookie = myCookie.split('{').join('');
@@ -206,10 +229,26 @@ if ( class_exists( 'GFCommon' ) ) {
                 utm_term = cookieObj['utm_term'];
                 utm_campaign = cookieObj['utm_campaign'];
                 utm_content = cookieObj['utm_content'];
+                utm_gclid = cookieObj['utm_gclid'];
+            }
+
+            // gclid
+            let utm_gclid_field = document.querySelector('[value="utm_gclid"]');
+            if ( utm_gclid != false ) {
+                if ( utm_gclid_field != null ) {
+                    if ( utm_gclid_field.value != utm_gclid ) {
+                        utm_gclid_field.value = utm_gclid;
+                    }
+                }
+            }
+            if ( utm_gclid_field ) {
+                if ( utm_gclid_field.value == 'utm_gclid' ) {
+                    utm_gclid_field.value = null;
+                }
             }
 
             // id
-            var utm_id_field = document.querySelector('[value="utm_id"]');
+            let utm_id_field = document.querySelector('[value="utm_id"]');
             if ( utm_id != false ) {
                 if ( utm_id_field != null ) {
                     if ( utm_id_field.value != utm_id ) {
@@ -224,7 +263,7 @@ if ( class_exists( 'GFCommon' ) ) {
             }
 
             // source
-            var utm_source_field = document.querySelector('[value="utm_source"]');
+            let utm_source_field = document.querySelector('[value="utm_source"]');
             if ( utm_source != false ) {
                 if ( utm_source_field != null ) {
                     if ( utm_source_field.value != utm_source ) {
@@ -313,17 +352,43 @@ if ( class_exists( 'GFCommon' ) ) {
                     utm_content_field.value = null;
                 }
             }
+
+            <?php if ( $params['debug'] === 'true' ) { ?>
+                if ( utm_id_field ) {
+                    console.log("utm_id_field value: " + utm_id_field.value);
+                }
+                if ( utm_source_field ) {
+                    console.log("utm_source value: " + utm_source_field.value);
+                }
+                if ( utm_medium_field ) {
+                    console.log("utm_medium_field value: " + utm_medium_field.value);
+                }
+                if ( utm_name_field ) {
+                    console.log("utm_name_field value: " + utm_name_field.value);
+                }
+                if ( utm_term_field ) {
+                    console.log("utm_term_field value: " + utm_term_field.value);
+                }
+                if ( utm_campaign_field ) {
+                    console.log("utm_campaign_field value: " + utm_campaign_field.value);
+                }
+                if ( utm_content_field ) {
+                    console.log("utm_content_field value: " + utm_content_field.value);
+                }
+                if ( utm_gclid_field ) {
+                    console.log("utm_gclid_field value: " + utm_gclid_field.value);
+                }
+            <?php } ?>
             
         </script>
 
         <?php
-        
 
         // return content
         $content = ob_get_clean();
         return $content;
 
     }
-    add_shortcode( 'bbc_populate_gtm', 'bbc_populate_gtm_shortcode' );
+    add_shortcode( 'bbc_populate_utm', 'bbc_populate_utm_shortcode' );
 
 }
