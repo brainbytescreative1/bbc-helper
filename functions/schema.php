@@ -67,7 +67,7 @@ if ( class_exists('acf') ) {
             'capability'    => 'edit_posts',
             'redirect'      => false,
             'icon_url' => 'dashicons-admin-site-alt3',
-            'position' => 62,
+            'position' => 63.1,
         ));
     }
 

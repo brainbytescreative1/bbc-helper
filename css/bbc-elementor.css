@@ -1,0 +1,45 @@
+.d-none {
+  display: none;
+}
+.fixed-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  box-shadow: 0px 15px 10px -15px rgba(119, 122, 126, 0.16);
+  -webkit-box-shadow: 0px 15px 10px -15px rgba(119, 122, 126, 0.16);
+  z-index: 1000;
+}
+@media screen and (min-width: 783px) {
+  .logged-in .fixed-top {
+    top: 32px;
+  }
+}
+/* transition animation */
+.animated {
+  animation-duration: .5s;
+  animation-fill-mode: both;
+  will-change: transform, opacity;
+}
+.animated.slideDown {
+  animation-name: slideDown;
+}
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.animated.slideUp {
+  animation-name: slideUp;
+}
+@keyframes slideUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
