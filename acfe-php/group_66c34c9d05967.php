@@ -55,7 +55,7 @@ acf_add_local_field_group(array(
 			'return_format' => 'array',
 			'min_size' => '',
 			'max_size' => '',
-			'mime_types' => '',
+			'mime_types' => 'json',
 			'library' => 'all',
 		),
 		array(

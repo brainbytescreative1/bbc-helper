@@ -3,40 +3,84 @@
 if ( class_exists('acf') ) {
 
     // get schema function
-    function bbc_get_schema($field = false) {
+    function bbc_get_schema($field = false, $type = false) {
+
         if ( $field ) {
-            $post_schema = $field;
-            foreach ( $post_schema as $schema ) {
 
-                $schema_format = null;
-                $upload_schema_json = null;
-                $paste_schema_code = null;
+            $post_schema_repeater = $field;
 
-                if ( isset( $schema['schema_format'] ) ) {
-                    $schema_format = $schema['schema_format'];
+            if ( $post_schema_repeater && is_countable($post_schema_repeater) ) {
+
+                if ( ! $type ) {
+                    $type = '';
                 }
-                
-                if ( $schema_format ) {
+
+                echo '<!-- custom '. $type .' schema -->';
+                echo "\r\n";
+
+                $count = 1;
+
+                foreach ( $post_schema_repeater as $post_schema_item ) {
+
+                    $schema_format = $post_schema_item['schema_format'];
+
                     if ( $schema_format === 'JSON Upload' ) {
-                        if ( isset( $schema['upload_schema_json']['url'] ) ) {
-                            $upload_schema_json = $schema['upload_schema_json']['url'];
+
+                        $post_schema_item = $post_schema_item['upload_schema_json'];
+
+                        if ( isset($post_schema_item) && $post_schema_item ) {
+
+                            echo '<!-- JSON schema '. $count .' -->';
+                            echo "\r\n";
+
+                            if ( isset($post_schema_item['url']) && $post_schema_item['url']) {
+
+                                $post_schema_item = $post_schema_item['url'];
+
+                                $arrContextOptions=array(
+                                    "ssl"=>array(
+                                        "verify_peer"=>false,
+                                        "verify_peer_name"=>false,
+                                    ),
+                                ); 
+                              
+                                $post_schema_item = file_get_contents($post_schema_item, false, stream_context_create($arrContextOptions));
+
+                            }
+
                         }
-                        if ( $upload_schema_json ) {
-                            echo '<script type="application/ld+json" id="page-schema">' . file_get_contents($upload_schema_json) . '</script>';
-                        }
+
                     } elseif ( $schema_format === 'Paste Code' ) {
-                        if ( isset( $schema['paste_schema_code'] ) ) {
-                            $paste_schema_code = $schema['paste_schema_code'];
-                        }
-                        if ( $paste_schema_code ) {
-                            echo '<script type="application/ld+json" id="page-schema">' . $paste_schema_code . '</script>';
-                        }
+
+                        echo '<!-- pasted schema '. $count .' -->';
+                        echo "\r\n";
+
+                        $post_schema_item = $post_schema_item['paste_schema_code'];
+
                     }
+
+                    // output script
+                    echo '<script type="application/ld+json" id="'. $type .'-schema-'. $count .'">';
+                    echo "\r\n";
+
+                        echo $post_schema_item;
+                        echo "\r\n";
+
+                    echo '</script>';
+                    echo "\r\n";
+                    echo "\r\n";
+
+                    $count++;
+
                 }
             }
+            
         } else {
+
             return null;
+
         }
+
     }
 
     // add page/post schema
@@ -44,15 +88,20 @@ if ( class_exists('acf') ) {
         add_action('wp_head', 'bbc_add_page_schema_to_header');
         function bbc_add_page_schema_to_header(){
 
+            // global schema
+            $global_schema = bbc_get_schema( get_field('schema_repeater', 'schema'), 'global' );
+            if ( isset($global_schema) && $global_schema ) {
+                echo $global_schema;
+            }
+
+            // post schema
             global $post;
             if ( $post ) {
                 $id = $post->ID;
-
-                // global schema
-                echo bbc_get_schema(get_field('schema_repeater', 'schema'));
-                
-                // page schema
-                echo bbc_get_schema(get_field('post_schema_repeater', $id));
+                $post_schema = bbc_get_schema( get_field('post_schema_repeater', $id), 'post' );
+                if ( $post_schema ) {
+                    echo $post_schema;
+                }
             }
         }
     }

@@ -391,4 +391,10 @@ if ( class_exists( 'GFCommon' ) ) {
     }
     add_shortcode( 'bbc_populate_utm', 'bbc_populate_utm_shortcode' );
 
+    function bbc_gf_editor_access() {
+        $role = get_role( 'editor' );
+        $role->add_cap( 'gform_full_access' );
+    }
+    add_action( 'admin_init', 'bbc_gf_editor_access' );
+
 }
