@@ -158,3 +158,10 @@ if ( ! function_exists('bbc_year_shortcode') ) {
   }
   add_shortcode( 'bbc_year', 'bbc_year_shortcode' );
 }
+
+if ( ! function_exists('year_shortcode') ) {
+  function year_shortcode() {
+    return date('Y');
+  }
+  add_shortcode( 'year', 'year_shortcode' );
+}
