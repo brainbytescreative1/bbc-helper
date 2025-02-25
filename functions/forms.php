@@ -213,7 +213,7 @@ if ( class_exists( 'GFCommon' ) ) {
                 utm_term = getUrlParameter('utm_term');
                 utm_campaign = getUrlParameter('utm_campaign');
                 utm_content = getUrlParameter('utm_content');
-                utm_gclid = getUrlParameter('utm_gclid');
+                utm_gclid = getUrlParameter('gclid');
             } else if ( myCookie ) {
                 // remove characters from cookie
                 myCookie = myCookie.split('{').join('');
@@ -229,7 +229,7 @@ if ( class_exists( 'GFCommon' ) ) {
                 utm_term = cookieObj['utm_term'];
                 utm_campaign = cookieObj['utm_campaign'];
                 utm_content = cookieObj['utm_content'];
-                utm_gclid = cookieObj['utm_gclid'];
+                utm_gclid = cookieObj['gclid'];
             }
 
             // gclid
