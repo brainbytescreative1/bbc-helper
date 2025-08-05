@@ -4,13 +4,13 @@
  *
  * @package       BBC Helper
  * @author        Brain Bytes Creative
- * @version       1.4
+ * @version       1.4.1
  *
  * @wordpress-plugin
  * Plugin Name:   BBC Helper
  * Plugin URI:    https://www.brainbytescreative.com/
  * Description:   Helper plugin for BBC websites
- * Version:       1.4
+ * Version:       1.4.1
  * Author:        Brain Bytes Creative
  * Author URI:    https://www.brainbytescreative.com/
  * Text Domain:   bbc-helper
@@ -70,7 +70,6 @@ if ( class_exists('acf') ) {
         }
     }
 
-
 }
 
 // plugin functions
@@ -78,7 +77,7 @@ if ( ! function_exists('bbc_helper_theme_functions') ) {
     function bbc_helper_theme_functions(){
         $include_files = Array(
             '/functions/forms.php',            
-            //'/functions/elementor.php',
+            '/functions/elementor.php',
             '/functions/global.php',
             '/functions/schema.php',
         );
