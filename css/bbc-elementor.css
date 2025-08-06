@@ -1,44 +1,49 @@
 /*** elementor options ***/
 
 /** default container padding **/
+
 /* desktop */
 @media screen and (min-width: 1025px) {
-  .e-con.e-parent {
+  .e-con.e-parent:not(.e-con.e-parent .e-con.e-parent) {
     --container-default-padding-top: var(--container_padding);
     --container-default-padding-bottom: var(--container_padding);
   }
-  .container-padding-half.e-con.e-parent {
+  .container-padding-half.e-con.e-parent:not(.e-con.e-parent .e-con.e-parent) {
     --container-default-padding-top: calc(var(--container_padding) * .5);
     --container-default-padding-bottom: calc(var(--container_padding) * .5);
   }
 }
+
 /* tablet */
 @media screen and (max-width: 1024px) and (min-width: 768px) {
-  .e-con.e-parent {
+  .e-con.e-parent:not(.e-con.e-parent .e-con.e-parent) {
     --container-default-padding-top: var(--container_padding_tablet);
     --container-default-padding-bottom: var(--container_padding_tablet);
   }
-  .container-padding-half.e-con.e-parent {
+  .container-padding-half.e-con.e-parent:not(.e-con.e-parent .e-con.e-parent) {
     --container-default-padding-top: calc(var(--container_padding_tablet) * .5);
     --container-default-padding-bottom: calc(var(--container_padding_tablet) * .5);
   }
 }
+
 /* mobile */
 @media screen and (max-width: 767px) {
-  .e-con.e-parent {
+  .e-con.e-parent:not(.e-con.e-parent .e-con.e-parent) {
     --container-default-padding-top: var(--container_padding_mobile);
     --container-default-padding-bottom: var(--container_padding_mobile);
   }
 }
+
 /* remove top and bottom padding */
-.e-con.e-parent.container-padding-top-none {
-  --container-default-padding-top: 0;
+.e-con.e-parent.container-padding-top-0 {
+  --container-default-padding-top: 0 !important;
 }
-.e-con.e-parent.container-padding-bottom-none {
-  --container-default-padding-bottom: 0;
+.e-con.e-parent.container-padding-bottom-0 {
+  --container-default-padding-bottom: 0 !important;
 }
 
 /** hero min height **/
+
 /* exclude mobile min height */
 @media screen and (min-width: 769px) {
   .hero-min-height {

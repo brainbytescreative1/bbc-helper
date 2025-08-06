@@ -40,7 +40,15 @@ acf_add_local_field_group(array(
 			'type' => 'tab',
 			'instructions' => '',
 			'required' => 0,
-			'conditional_logic' => 0,
+			'conditional_logic' => array(
+				array(
+					array(
+						'field' => 'field_689276a103079',
+						'operator' => '==',
+						'value' => 'enable',
+					),
+				),
+			),
 			'wrapper' => array(
 				'width' => '',
 				'class' => '',
@@ -57,7 +65,7 @@ acf_add_local_field_group(array(
 			'aria-label' => '',
 			'type' => 'number',
 			'instructions' => '',
-			'required' => 0,
+			'required' => 1,
 			'conditional_logic' => 0,
 			'wrapper' => array(
 				'width' => '33.33',
@@ -80,7 +88,7 @@ acf_add_local_field_group(array(
 			'aria-label' => '',
 			'type' => 'number',
 			'instructions' => '',
-			'required' => 0,
+			'required' => 1,
 			'conditional_logic' => 0,
 			'wrapper' => array(
 				'width' => '33.33',
@@ -103,7 +111,7 @@ acf_add_local_field_group(array(
 			'aria-label' => '',
 			'type' => 'number',
 			'instructions' => '',
-			'required' => 0,
+			'required' => 1,
 			'conditional_logic' => 0,
 			'wrapper' => array(
 				'width' => '33.33',
@@ -127,7 +135,15 @@ acf_add_local_field_group(array(
 			'type' => 'tab',
 			'instructions' => '',
 			'required' => 0,
-			'conditional_logic' => 0,
+			'conditional_logic' => array(
+				array(
+					array(
+						'field' => 'field_689276a103079',
+						'operator' => '==',
+						'value' => 'enable',
+					),
+				),
+			),
 			'wrapper' => array(
 				'width' => '',
 				'class' => '',
@@ -237,7 +253,15 @@ acf_add_local_field_group(array(
 			'type' => 'tab',
 			'instructions' => '',
 			'required' => 0,
-			'conditional_logic' => 0,
+			'conditional_logic' => array(
+				array(
+					array(
+						'field' => 'field_689276a103079',
+						'operator' => '==',
+						'value' => 'enable',
+					),
+				),
+			),
 			'wrapper' => array(
 				'width' => '',
 				'class' => '',
@@ -283,14 +307,16 @@ Desktop: 1024px and above | Tablet: 768px to 1024px | Mobile: 768px and below',
 			),
 			'message' => 'These values are used to calculate the default top and bottom padding of Elementor containers while maintaining the default left and right padding set in Elementor. This will not apply to any nested containers, so only the main parent container will be affected. You can customize each container\'s padding directly in Elementor if custom values are required, or add one of these classes to override the default padding in certain scenarios.
 
-Note that half-padding only applies to Tablet and Desktop sizes. Mobile padding defaults to the value of <strong>Container Padding Mobile</strong>.
+Note: Half-padding only applies to Tablet and Desktop sizes. Mobile padding defaults to the value of <strong>Container Padding Mobile</strong>.
+
+Note: <strong>All three padding values are required.</strong>
 
 <code>container-padding-half</code>
 
 Removes the top or bottom padding from a container at all screen widths.
 
-<code>container-padding-top-none</code>
-<code>container-padding-bottom-none</code>',
+<code>container-padding-top-0</code>
+<code>container-padding-bottom-0</code>',
 			'new_lines' => 'br',
 			'esc_html' => 0,
 		),
@@ -344,7 +370,7 @@ Add the following class instead if the hero should revert to its normal height o
 	'acfe_form' => 0,
 	'acfe_meta' => '',
 	'acfe_note' => '',
-	'modified' => 1754494919,
+	'modified' => 1754511363,
 ));
 
 endif;

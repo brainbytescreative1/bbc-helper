@@ -8,14 +8,14 @@ if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
   // create elementor options page
   if( function_exists('acf_add_options_page') ) {
     acf_add_options_page(array(
-      'page_title'    => 'Elementor Options',
-      'menu_title'    => 'Elementor Options',
+      'page_title'    => 'Elementor Styles',
+      'menu_title'    => 'Elementor Styles',
       'menu_slug'     => 'elementor_options',
       'post_id' 		=> 'elementor_options',
       'capability'    => 'edit_posts',
       'redirect'      => false,
-      'icon_url' => 'dashicons-analytics',
-      'position' => 63.2,
+      'icon_url' => 'dashicons-welcome-widgets-menus',
+      'position' => 59,
     ));
   }
 
@@ -47,31 +47,50 @@ if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
 
       // calculate bottom mobile menu height
       $bottom_mobile_menu_height = get_field('bottom_mobile_menu_height', 'elementor_options');
-      $bottom_mobile_menu_height = $bottom_mobile_menu_height + $header_height_mobile;
+      if ( $bottom_mobile_menu_height && $header_height_mobile ) {
+        $bottom_mobile_menu_height = $bottom_mobile_menu_height + $header_height_mobile;
+      }
 
       // calculate if logged in
       if ( is_user_logged_in() ) {
         $header_height = $header_height + 32;
         $header_height_tablet = $header_height_tablet + 32;
         $header_height_mobile = $header_height_mobile + 46;
-        $bottom_mobile_menu_height = $bottom_mobile_menu_height + 46;
+        if ( $bottom_mobile_menu_height ) {
+          $bottom_mobile_menu_height = $bottom_mobile_menu_height + 46;
+        }
       }
 
       // root output
       ?>
       <style class="elementor-options">
         :root {
+        <?php if ( $header_height ) { ?>
           --header_height: <?=$header_height?>px;
+        <?php } ?>
+        <?php if ( $header_height_tablet ) { ?>
           --header_height_tablet: <?=$header_height_tablet?>px;
+        <?php } ?>
+        <?php if ( $header_height_mobile ) { ?>
           --header_height_mobile: <?=$header_height_mobile?>px;
+        <?php } ?>
+
+        <?php if ( $container_padding ) { ?>
           --container_padding: <?=$container_padding?>px;
+        <?php } ?>
+        <?php if ( $container_padding_tablet ) { ?>
           --container_padding_tablet: <?=$container_padding_tablet?>px;
+        <?php } ?>
+        <?php if ( $container_padding_mobile ) { ?>
           --container_padding_mobile: <?=$container_padding_mobile?>px;
+        <?php } ?>
+
+        <?php if ( $bottom_mobile_menu_height ) { ?>
           --bottom_mobile_menu_height: <?=$bottom_mobile_menu_height?>px;
+        <?php } ?>
         }
       </style>
       <?php
-      echo "\r\n";
     }
 
     /*

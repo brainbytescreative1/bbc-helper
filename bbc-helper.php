@@ -27,6 +27,8 @@ define('PLUGIN_VERSION', '1.4');
 // acf load functions
 if ( class_exists('acf') ) {
 
+    $site_name = get_bloginfo( 'name' );
+
     // load json
     if ( ! function_exists('bbc_acf_json_load_point') ) {
         //add_filter('includes/acf/settings/load_json', 'bbc_acf_json_load_point');
@@ -42,7 +44,10 @@ if ( class_exists('acf') ) {
         function bbc_acf_json_save_point( $path ) {
             return plugin_dir_path( __FILE__ ) . 'acf-json';
         }
-        //add_filter( 'acf/settings/save_json', 'bbc_acf_json_save_point' );
+        // only save if local site that pushes to Github
+        if ( $site_name === 'Pico Starter Site' ) {
+            add_filter( 'acf/settings/save_json', 'bbc_acf_json_save_point' );
+        }
     }
 
     // load php
@@ -56,9 +61,12 @@ if ( class_exists('acf') ) {
 
     // save php
     if ( ! function_exists('bbc_acfe_php_save_point') ) {
-        add_filter('acfe/settings/php_save', 'bbc_acfe_php_save_point');
         function bbc_acfe_php_save_point($path){
             return plugin_dir_path( __FILE__ ) . '/acfe-php';
+        }
+        // only save if local site that pushes to Github
+        if ( $site_name === 'Pico Starter Site' ) {
+            add_filter('acfe/settings/php_save', 'bbc_acfe_php_save_point');
         }
     }
 
