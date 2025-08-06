@@ -7,28 +7,6 @@ acf_add_local_field_group(array(
 	'title' => 'Elementor Options',
 	'fields' => array(
 		array(
-			'key' => 'field_689275f403078',
-			'label' => 'Elementor Options Notes',
-			'name' => '',
-			'aria-label' => '',
-			'type' => 'message',
-			'instructions' => '',
-			'required' => 0,
-			'conditional_logic' => 0,
-			'wrapper' => array(
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'message' => 'Please note that the following responsive breakpoints are hard-coded into the embedded stylesheets that are included in this plugin. If the breakpoints are adjusted in Elementor settings, you may need to include some custom CSS to compensate.
-
-Desktop: 1024px and above
-Tablet: 768px to 1024px
-Mobile: 768px and below',
-			'new_lines' => 'br',
-			'esc_html' => 0,
-		),
-		array(
 			'key' => 'field_689276a103079',
 			'label' => 'Enable Custom Elementor Options',
 			'name' => 'enable_custom_elementor_options',
@@ -71,33 +49,6 @@ Mobile: 768px and below',
 			'placement' => 'top',
 			'endpoint' => 0,
 			'selected' => 0,
-		),
-		array(
-			'key' => 'field_68926292ea1e2',
-			'label' => 'Add Default Container Padding',
-			'name' => '',
-			'aria-label' => '',
-			'type' => 'message',
-			'instructions' => '',
-			'required' => 0,
-			'conditional_logic' => 0,
-			'wrapper' => array(
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'message' => 'These values are used to calculate the default top and bottom padding of Elementor containers while maintaining the default left and right padding set in Elementor. This will not apply to any nested containers, so only the main parent container will be affected. You can customize each container\'s padding directly in Elementor if custom values are required, or add one of these classes to override the default padding in certain scenarios.
-
-Note that half-padding only applies to Tablet and Desktop sizes. Mobile padding defaults to the value of <strong>Container Padding Mobile</strong>.
-
-<code>container-padding-half</code>
-
-Removes the top or bottom padding from a container at all screen widths.
-
-<code>container-padding-top-none</code>
-<code>container-padding-bottom-none</code>',
-			'new_lines' => 'br',
-			'esc_html' => 0,
 		),
 		array(
 			'key' => 'field_6892607d866da',
@@ -187,30 +138,6 @@ Removes the top or bottom padding from a container at all screen widths.
 			'selected' => 0,
 		),
 		array(
-			'key' => 'field_68926143ffda4',
-			'label' => 'Add Header Heights',
-			'name' => '',
-			'aria-label' => '',
-			'type' => 'message',
-			'instructions' => '',
-			'required' => 0,
-			'conditional_logic' => 0,
-			'wrapper' => array(
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'message' => 'These values are used to calculate a min-height of 100vh in hero sections to account for the height of the navigation header. Add the following class to any Elementor section where you want to enable the min-height.
-
-<code>hero-min-height</code>
-
-Add the following class instead if the hero should revert to its normal height on mobile.
-
-<code>hero-min-height-disable-mobile</code>',
-			'new_lines' => 'br',
-			'esc_html' => 0,
-		),
-		array(
 			'key' => 'field_675746a063b51',
 			'label' => 'Header Height',
 			'name' => 'header_height',
@@ -280,30 +207,12 @@ Add the following class instead if the hero should revert to its normal height o
 			'append' => 'px',
 		),
 		array(
-			'key' => 'field_68926ebc1ebeb',
-			'label' => 'Compensate for Bottom Mobile Menu',
-			'name' => '',
-			'aria-label' => '',
-			'type' => 'message',
-			'instructions' => '',
-			'required' => 0,
-			'conditional_logic' => 0,
-			'wrapper' => array(
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'message' => 'If using the bottom mobile menu, add the height of the module to account for the new bottom position of the hero section. The new min-height will be calculated automatically if a value is added here.',
-			'new_lines' => 'br',
-			'esc_html' => 0,
-		),
-		array(
 			'key' => 'field_68926f181ebec',
 			'label' => 'Bottom Mobile Menu Height',
 			'name' => 'bottom_mobile_menu_height',
 			'aria-label' => '',
 			'type' => 'number',
-			'instructions' => '',
+			'instructions' => 'If using the bottom mobile menu, add the height of the module to account for the new bottom position of the hero section. The new min-height will be calculated automatically if a value is added here.',
 			'required' => 0,
 			'conditional_logic' => 0,
 			'wrapper' => array(
@@ -320,6 +229,95 @@ Add the following class instead if the hero should revert to its normal height o
 			'prepend' => '',
 			'append' => 'px',
 		),
+		array(
+			'key' => 'field_689376222ca44',
+			'label' => 'Notes',
+			'name' => '',
+			'aria-label' => '',
+			'type' => 'tab',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'placement' => 'top',
+			'endpoint' => 0,
+			'selected' => 0,
+		),
+		array(
+			'key' => 'field_689275f403078',
+			'label' => 'Elementor Options Notes',
+			'name' => '',
+			'aria-label' => '',
+			'type' => 'message',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'message' => 'Please note that the following responsive breakpoints are hard-coded into the embedded stylesheets that are included in this plugin. If the breakpoints are adjusted in Elementor settings, you may need to include some custom CSS to compensate.
+
+Desktop: 1024px and above | Tablet: 768px to 1024px | Mobile: 768px and below',
+			'new_lines' => 'br',
+			'esc_html' => 0,
+		),
+		array(
+			'key' => 'field_68926292ea1e2',
+			'label' => 'Add Default Container Padding',
+			'name' => '',
+			'aria-label' => '',
+			'type' => 'message',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'message' => 'These values are used to calculate the default top and bottom padding of Elementor containers while maintaining the default left and right padding set in Elementor. This will not apply to any nested containers, so only the main parent container will be affected. You can customize each container\'s padding directly in Elementor if custom values are required, or add one of these classes to override the default padding in certain scenarios.
+
+Note that half-padding only applies to Tablet and Desktop sizes. Mobile padding defaults to the value of <strong>Container Padding Mobile</strong>.
+
+<code>container-padding-half</code>
+
+Removes the top or bottom padding from a container at all screen widths.
+
+<code>container-padding-top-none</code>
+<code>container-padding-bottom-none</code>',
+			'new_lines' => 'br',
+			'esc_html' => 0,
+		),
+		array(
+			'key' => 'field_68926143ffda4',
+			'label' => 'Add Header Heights',
+			'name' => '',
+			'aria-label' => '',
+			'type' => 'message',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'message' => 'These values are used to calculate a min-height of 100vh in hero sections to account for the height of the navigation header. Add the following class to any Elementor section where you want to enable the min-height.
+
+<code>hero-min-height</code>
+
+Add the following class instead if the hero should revert to its normal height on mobile.
+
+<code>hero-min-height-disable-mobile</code>',
+			'new_lines' => 'br',
+			'esc_html' => 0,
+		),
 	),
 	'location' => array(
 		array(
@@ -334,7 +332,7 @@ Add the following class instead if the hero should revert to its normal height o
 	'position' => 'normal',
 	'style' => 'default',
 	'label_placement' => 'top',
-	'instruction_placement' => 'label',
+	'instruction_placement' => 'tooltip',
 	'hide_on_screen' => '',
 	'active' => true,
 	'description' => '',
@@ -346,7 +344,7 @@ Add the following class instead if the hero should revert to its normal height o
 	'acfe_form' => 0,
 	'acfe_meta' => '',
 	'acfe_note' => '',
-	'modified' => 1754429197,
+	'modified' => 1754494919,
 ));
 
 endif;
