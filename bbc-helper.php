@@ -22,7 +22,7 @@
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define('PLUGIN_VERSION', '1.4');
+define('PLUGIN_VERSION', '1.4.6');
 
 // acf load functions
 if ( class_exists('acf') ) {
