@@ -4,13 +4,13 @@
  *
  * @package       BBC Helper
  * @author        Brain Bytes Creative
- * @version       1.4.4
+ * @version       1.4.5
  *
  * @wordpress-plugin
  * Plugin Name:   BBC Helper
  * Plugin URI:    https://www.brainbytescreative.com/
  * Description:   Helper plugin for BBC websites
- * Version:       1.4.4
+ * Version:       1.4.5
  * Author:        Brain Bytes Creative
  * Author URI:    https://www.brainbytescreative.com/
  * Text Domain:   bbc-helper
