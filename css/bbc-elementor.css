@@ -46,14 +46,20 @@
 .hero-min-height {
   min-height: calc(100vh - var(--header_height));
 }
-/* exclude mobile min height */
-@media screen and (min-width: 769px) {
-  .hero-min-height-disable-mobile {
-    min-height: calc(100vh - var(--header_height));
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+  .hero-min-height {
+    min-height: calc(100vh - var(--header_height_tablet));
   }
 }
 @media screen and (max-width: 768px) {
   .hero-min-height {
-    min-height: calc(100vh - var(--bottom_mobile_menu_height)) !important;
+    min-height: calc(100vh - var(--header_height_mobile)) !important;
+  }
+}
+
+/* exclude mobile min height */
+@media screen and (min-width: 769px) {
+  .hero-min-height-disable-mobile {
+    min-height: calc(100vh - var(--header_height));
   }
 }

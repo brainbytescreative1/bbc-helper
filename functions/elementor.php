@@ -48,7 +48,7 @@ if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
       // calculate bottom mobile menu height
       $bottom_mobile_menu_height = get_field('bottom_mobile_menu_height', 'elementor_options');
       if ( $bottom_mobile_menu_height && $header_height_mobile ) {
-        $bottom_mobile_menu_height = $bottom_mobile_menu_height + $header_height_mobile;
+        $header_height_mobile = $header_height_mobile + $bottom_mobile_menu_height;
       }
 
       // calculate if logged in
@@ -56,39 +56,31 @@ if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
         $header_height = $header_height + 32;
         $header_height_tablet = $header_height_tablet + 32;
         $header_height_mobile = $header_height_mobile + 46;
-        if ( $bottom_mobile_menu_height ) {
-          $bottom_mobile_menu_height = $bottom_mobile_menu_height + 46;
-        }
       }
 
       // root output
       ?>
       <style class="elementor-options">
-        :root {
-        <?php if ( $header_height ) { ?>
-          --header_height: <?=$header_height?>px;
-        <?php } ?>
-        <?php if ( $header_height_tablet ) { ?>
-          --header_height_tablet: <?=$header_height_tablet?>px;
-        <?php } ?>
-        <?php if ( $header_height_mobile ) { ?>
-          --header_height_mobile: <?=$header_height_mobile?>px;
-        <?php } ?>
-
-        <?php if ( $container_padding ) { ?>
-          --container_padding: <?=$container_padding?>px;
-        <?php } ?>
-        <?php if ( $container_padding_tablet ) { ?>
-          --container_padding_tablet: <?=$container_padding_tablet?>px;
-        <?php } ?>
-        <?php if ( $container_padding_mobile ) { ?>
-          --container_padding_mobile: <?=$container_padding_mobile?>px;
-        <?php } ?>
-
-        <?php if ( $bottom_mobile_menu_height ) { ?>
-          --bottom_mobile_menu_height: <?=$bottom_mobile_menu_height?>px;
-        <?php } ?>
-        }
+:root {
+<?php if ( $container_padding ) { ?>
+  --container_padding: <?=$container_padding?>px;
+<?php } ?>
+<?php if ( $container_padding_tablet ) { ?>
+  --container_padding_tablet: <?=$container_padding_tablet?>px;
+<?php } ?>
+<?php if ( $container_padding_mobile ) { ?>
+  --container_padding_mobile: <?=$container_padding_mobile?>px;
+<?php } ?>
+<?php if ( $header_height ) { ?>
+  --header_height: <?=$header_height?>px;
+<?php } ?>
+<?php if ( $header_height_tablet ) { ?>
+  --header_height_tablet: <?=$header_height_tablet?>px;
+<?php } ?>
+<?php if ( $header_height_mobile ) { ?>
+  --header_height_mobile: <?=$header_height_mobile?>px;
+<?php } ?>
+}
       </style>
       <?php
     }
