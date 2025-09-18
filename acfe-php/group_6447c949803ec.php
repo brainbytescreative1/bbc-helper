@@ -4,7 +4,7 @@ if( function_exists('acf_add_local_field_group') ):
 
 acf_add_local_field_group(array(
 	'key' => 'group_6447c949803ec',
-	'title' => 'Schema: Options Page',
+	'title' => 'Schema: Global Schema',
 	'fields' => array(
 		array(
 			'key' => 'field_6447c94a81db8',
@@ -85,7 +85,7 @@ acf_add_local_field_group(array(
 	'acfe_form' => 0,
 	'acfe_meta' => '',
 	'acfe_note' => '',
-	'modified' => 1733766222,
+	'modified' => 1758207662,
 ));
 
 endif;
