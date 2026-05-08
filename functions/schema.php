@@ -139,7 +139,6 @@ if ( class_exists('acf') ) {
 
             // get default schema value    
             $default_schema = get_post_meta( get_the_ID(), 'default_schema', true );
-            echo 'default schema: ' . $default_schema;
 
             // create posts array
             $posts_schema_disable = [];
