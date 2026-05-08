@@ -2,10 +2,46 @@
 
 if( function_exists('acf_add_local_field_group') ):
 
-acf_add_local_field_group(array(
+add_action( 'acf/include_fields', function() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( array(
 	'key' => 'group_6447d35f683c7',
 	'title' => 'Schema: Post',
 	'fields' => array(
+		array(
+			'key' => 'field_69fe094fe0a60',
+			'label' => 'Default Schema',
+			'name' => 'default_schema',
+			'aria-label' => '',
+			'type' => 'select',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'choices' => array(
+				'enable' => 'enable',
+				'disable' => 'disable',
+			),
+			'default_value' => 'enable',
+			'return_format' => 'value',
+			'multiple' => 0,
+			'allow_custom' => 0,
+			'placeholder' => '',
+			'search_placeholder' => '',
+			'allow_null' => 0,
+			'allow_in_bindings' => 0,
+			'ui' => 0,
+			'ajax' => 0,
+			'create_options' => 0,
+			'save_options' => 0,
+		),
 		array(
 			'key' => 'field_6447d35f6f9af',
 			'label' => 'Schema',
@@ -79,14 +115,15 @@ acf_add_local_field_group(array(
 	'description' => '',
 	'show_in_rest' => 0,
 	'display_title' => '',
-	'acfe_display_title' => '',
+	'allow_ai_access' => false,
+	'ai_description' => '',
 	'acfe_autosync' => array(
 		0 => 'php',
 	),
 	'acfe_form' => 0,
 	'acfe_meta' => '',
 	'acfe_note' => '',
-	'modified' => 1762368011,
-));
+) );
+} );
 
 endif;
