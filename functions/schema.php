@@ -130,4 +130,43 @@ if ( class_exists('acf') ) {
         add_filter( 'upload_mimes', 'bbc_add_upload_mimes' );
     }
 
+    // disable default Yoast schema
+    // check whether Yoast installed
+    if ( class_exists( 'WPSEO_Options' ) ) {
+        // enable filter
+        add_filter( 'wpseo_json_ld_output', 'bbc_disable_yoast_schema_on_specific_pages', 10, 1 );
+        function bbc_disable_yoast_schema_on_specific_pages( $data ) {
+
+            // get default schema value    
+            $default_schema = get_post_meta( get_the_ID(), 'default_schema', true );
+
+            // create posts array
+            $posts_schema_disable = [];
+
+            // check if post
+            global $post;
+            if ( $post ) {
+
+                // if post has default schema disabled
+                if ( $default_schema && ( $default_schema === 'disable' ) ) {
+
+                    // get post id
+                    $id = $post->ID;
+
+                    // add post list to array
+                    $posts_schema_disable[] = $id;
+
+                }
+
+            }
+
+            // array of the IDs of the pages you want to target
+            if ( is_page( $posts_schema_disable ) ) {
+                return false;
+            }
+            return $data;
+            
+        }
+    }
+
 }
