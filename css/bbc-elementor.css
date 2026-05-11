@@ -44,8 +44,8 @@
 
 /* do not apply padding to child containers */
 .e-con.e-child {
-  --container-default-padding-top: var(--padding-top);
-  --container-default-padding-bottom: var(--padding-top); 
+  --container-default-padding-top: var(--container-default-padding-top);
+  --container-default-padding-bottom: var(--container-default-padding-bottom); 
 }
 
 /** hero min height **/

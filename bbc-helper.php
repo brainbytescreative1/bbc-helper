@@ -4,7 +4,7 @@
  *
  * @package       BBC Helper
  * @author        Brain Bytes Creative
- * @version       1.4.91
+ * @version       1.5.0
  *
  * @wordpress-plugin
  * Plugin Name:   BBC Helper
@@ -22,7 +22,7 @@
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define('PLUGIN_VERSION', '1.4.91');
+define('PLUGIN_VERSION', '1.5.0');
 
 // acf load functions
 if ( class_exists('acf') ) {
