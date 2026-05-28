@@ -161,7 +161,7 @@ if ( class_exists('acf') ) {
             }
 
             // array of the IDs of the pages you want to target
-            if ( is_page( $posts_schema_disable ) ) {
+            if ( is_page( ! $posts_schema_disable ) ) {
                 return false;
             }
             return $data;
