@@ -1,5 +1,8 @@
 <?php
 
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 function bbc_global_fields( $wp_customize ) {
 
   // global email
@@ -8,7 +11,8 @@ function bbc_global_fields( $wp_customize ) {
     array(
       'default' => '',
       'type' => 'option',
-      'capability' => 'edit_theme_options'
+      'capability' => 'edit_theme_options',
+      'sanitize_callback' => 'sanitize_email'
     ),
   );
   $wp_customize->add_control( new WP_Customize_Control(
@@ -32,7 +36,8 @@ function bbc_global_fields( $wp_customize ) {
     array(
       'default' => '',
       'type' => 'option',
-      'capability' => 'edit_theme_options'
+      'capability' => 'edit_theme_options',
+      'sanitize_callback' => 'sanitize_text_field'
     ),
   );
   $wp_customize->add_control( new WP_Customize_Control(
@@ -56,7 +61,8 @@ function bbc_global_fields( $wp_customize ) {
     array(
       'default' => '',
       'type' => 'option',
-      'capability' => 'edit_theme_options'
+      'capability' => 'edit_theme_options',
+      'sanitize_callback' => 'wp_kses_post'
     ),
   );
   $wp_customize->add_control( new WP_Customize_Control(
@@ -82,7 +88,7 @@ if ( ! function_exists('bbc_site_name_shortcode') ) {
   function bbc_site_name_shortcode() {
     $site_name = get_bloginfo('name');
     if ( $site_name ) {
-      return $site_name;
+      return esc_html($site_name);
     } else {
       return '[site_name]';
     }
@@ -94,7 +100,7 @@ if ( ! function_exists('bbc_site_name_shortcode') ) {
 // site url
 if ( ! function_exists('bbc_site_url_shortcode') ) {
   function bbc_site_url_shortcode() {
-    return '<a href="' . get_site_url() . '">' . get_site_url() . '</a>';
+    return '<a href="' . esc_url( get_site_url() ) . '">' . esc_html( get_site_url() ) . '</a>';
   }
   add_shortcode( 'bbc_site_url', 'bbc_site_url_shortcode' );
 }
@@ -113,9 +119,9 @@ if ( ! function_exists('bbc_global_email_shortcode') ) {
 
     if ( isset($global_email) && $global_email ) {
       if ( $link['link'] ) {
-        return '<a href="mailto:' . $global_email . '">' . $global_email . '</a>';
+        return '<a href="' . esc_url( 'mailto:' . $global_email ) . '">' . esc_html($global_email) . '</a>';
       } else {
-        return $global_email;
+        return esc_html($global_email);
       }
     } else {
       return 'GLOBAL_EMAIL';
@@ -140,9 +146,9 @@ if ( ! function_exists('bbc_global_phone_shortcode') ) {
     if ( $global_phone ) {
       if ( $link['link'] ) {
         $global_phone_clean = preg_replace('/[^a-z\d]/i', '', $global_phone);
-        return '<a href="tel:+1' . $global_phone_clean . '">' . $global_phone . '</a>';
+        return '<a href="tel:+1' . esc_attr($global_phone_clean) . '">' . esc_html($global_phone) . '</a>';
       } else {
-        return $global_phone;
+        return esc_html($global_phone);
       }
     } else {
       return 'GLOBAL_PHONE';
@@ -157,7 +163,7 @@ if ( ! function_exists('bbc_global_address_shortcode') ) {
   function bbc_global_address_shortcode() {
     $global_address = get_option('global_address');
     if ( $global_address ) {
-      return $global_address;
+      return wp_kses_post($global_address);
     } else {
       return 'GLOBAL_ADDRESS';
     }

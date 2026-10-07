@@ -1,6 +1,60 @@
 <?php
 
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 if ( class_exists('acf') ) {
+
+    // get raw contents of an uploaded schema file
+    function bbc_get_schema_file_contents($file = false) {
+
+        if ( ! is_array($file) || empty($file['ID']) ) {
+            return false;
+        }
+
+        // read from disk when the file is stored locally
+        $path = get_attached_file( $file['ID'] );
+
+        if ( $path && strtolower( pathinfo($path, PATHINFO_EXTENSION) ) === 'json' && is_readable($path) ) {
+            return file_get_contents($path);
+        }
+
+        // fall back to a remote request for offloaded media
+        if ( ! empty($file['url']) && strtolower( pathinfo( (string) wp_parse_url($file['url'], PHP_URL_PATH), PATHINFO_EXTENSION ) ) === 'json' ) {
+
+            $response = wp_safe_remote_get( $file['url'], array( 'timeout' => 5 ) );
+
+            if ( ! is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200 ) {
+                return wp_remote_retrieve_body($response);
+            }
+
+        }
+
+        return false;
+
+    }
+
+    // validate schema and return it as safely encoded JSON
+    function bbc_prepare_schema_json($schema = false) {
+
+        if ( ! is_string($schema) || trim($schema) === '' ) {
+            return false;
+        }
+
+        // remove wrapping script tags if they were included
+        $schema = preg_replace('/^\s*<script[^>]*>/i', '', $schema);
+        $schema = preg_replace('/<\/script>\s*$/i', '', $schema);
+
+        $decoded = json_decode( trim($schema) );
+
+        if ( ! is_object($decoded) && ! is_array($decoded) ) {
+            return false;
+        }
+
+        // JSON_HEX_TAG keeps the output from closing the script tag
+        return wp_json_encode( $decoded, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION );
+
+    }
 
     // get schema function
     function bbc_get_schema($field = false, $type = false) {
@@ -15,66 +69,69 @@ if ( class_exists('acf') ) {
                     $type = '';
                 }
 
-                echo '<!-- custom '. $type .' schema -->';
+                echo '<!-- custom '. esc_html($type) .' schema -->';
                 echo "\r\n";
 
                 $count = 1;
 
                 foreach ( $post_schema_repeater as $post_schema_item ) {
 
-                    $schema_format = $post_schema_item['schema_format'];
+                    $schema_format = isset($post_schema_item['schema_format']) ? $post_schema_item['schema_format'] : false;
+                    $schema_label = false;
+                    $schema_json = false;
 
                     if ( $schema_format === 'JSON Upload' ) {
 
-                        $post_schema_item = $post_schema_item['upload_schema_json'];
+                        $schema_label = 'JSON';
 
-                        if ( isset($post_schema_item) && $post_schema_item ) {
-
-                            echo '<!-- JSON schema '. $count .' -->';
-                            echo "\r\n";
-
-                            if ( isset($post_schema_item['url']) && $post_schema_item['url']) {
-
-                                $post_schema_item = $post_schema_item['url'];
-
-                                $arrContextOptions=array(
-                                    "ssl"=>array(
-                                        "verify_peer"=>false,
-                                        "verify_peer_name"=>false,
-                                    ),
-                                ); 
-                              
-                                $post_schema_item = file_get_contents($post_schema_item, false, stream_context_create($arrContextOptions));
-
-                            }
-
+                        if ( isset($post_schema_item['upload_schema_json']) && $post_schema_item['upload_schema_json'] ) {
+                            $schema_json = bbc_get_schema_file_contents( $post_schema_item['upload_schema_json'] );
                         }
 
                     } elseif ( $schema_format === 'Paste Code' ) {
 
-                        echo '<!-- pasted schema '. $count .' -->';
-                        echo "\r\n";
+                        $schema_label = 'pasted';
 
-                        $post_schema_item = $post_schema_item['paste_schema_code'];
+                        if ( isset($post_schema_item['paste_schema_code']) ) {
+                            $schema_json = $post_schema_item['paste_schema_code'];
+                        }
 
                     }
 
-                    // output script
-                    echo '<script type="application/ld+json" id="'. $type .'-schema-'. $count .'">';
-                    echo "\r\n";
+                    if ( $schema_label ) {
 
-                        echo $post_schema_item;
-                        echo "\r\n";
+                        $schema_json = bbc_prepare_schema_json($schema_json);
 
-                    echo '</script>';
-                    echo "\r\n";
-                    echo "\r\n";
+                        if ( $schema_json ) {
+
+                            echo '<!-- '. $schema_label .' schema '. $count .' -->';
+                            echo "\r\n";
+
+                            // output script
+                            echo '<script type="application/ld+json" id="'. esc_attr($type) .'-schema-'. $count .'">';
+                            echo "\r\n";
+
+                                echo $schema_json;
+                                echo "\r\n";
+
+                            echo '</script>';
+                            echo "\r\n";
+                            echo "\r\n";
+
+                        } else {
+
+                            echo '<!-- '. $schema_label .' schema '. $count .' skipped: invalid JSON -->';
+                            echo "\r\n";
+
+                        }
+
+                    }
 
                     $count++;
 
                 }
             }
-            
+
         } else {
 
             return null;
@@ -89,19 +146,11 @@ if ( class_exists('acf') ) {
         function bbc_add_page_schema_to_header(){
 
             // global schema
-            $global_schema = bbc_get_schema( get_field('schema_repeater', 'schema'), 'global' );
-            if ( isset($global_schema) && $global_schema ) {
-                echo $global_schema;
-            }
+            bbc_get_schema( get_field('schema_repeater', 'schema'), 'global' );
 
             // post schema
-            global $post;
-            if ( $post ) {
-                $id = $post->ID;
-                $post_schema = bbc_get_schema( get_field('post_schema_repeater', $id), 'post' );
-                if ( $post_schema ) {
-                    echo $post_schema;
-                }
+            if ( is_singular() ) {
+                bbc_get_schema( get_field('post_schema_repeater', get_queried_object_id()), 'post' );
             }
         }
     }
@@ -113,7 +162,7 @@ if ( class_exists('acf') ) {
             'menu_title'    => 'Schema',
             'menu_slug'     => 'schema',
             'post_id' 		=> 'schema',
-            'capability'    => 'edit_posts',
+            'capability'    => 'edit_others_posts',
             'redirect'      => false,
             'icon_url' => 'dashicons-admin-site-alt3',
             'position' => 98,
@@ -122,8 +171,7 @@ if ( class_exists('acf') ) {
 
     // allow json file uploads
     if ( ! function_exists('bbc_add_upload_mimes') ) {
-        function bbc_add_upload_mimes( $types ) { 
-            $types['json'] = 'text/plain';
+        function bbc_add_upload_mimes( $types ) {
             $types['json'] = 'application/json';
             return $types;
         }
@@ -137,35 +185,13 @@ if ( class_exists('acf') ) {
         add_filter( 'wpseo_json_ld_output', 'bbc_disable_yoast_schema_on_specific_pages', 10, 1 );
         function bbc_disable_yoast_schema_on_specific_pages( $data ) {
 
-            // get default schema value    
-            $default_schema = get_post_meta( get_the_ID(), 'default_schema', true );
-
-            // create posts array
-            $posts_schema_disable = [];
-
-            // check if post
-            global $post;
-            if ( $post ) {
-
-                // if post has default schema disabled
-                if ( $default_schema && ( $default_schema === 'disable' ) ) {
-
-                    // get post id
-                    $id = $post->ID;
-
-                    // add post list to array
-                    $posts_schema_disable[] = $id;
-
-                }
-
-            }
-
-            // array of the IDs of the pages you want to target
-            if ( is_page( ! $posts_schema_disable ) ) {
+            // if the current page/post has default schema disabled
+            if ( is_singular() && get_post_meta( get_queried_object_id(), 'default_schema', true ) === 'disable' ) {
                 return false;
             }
+
             return $data;
-            
+
         }
     }
 

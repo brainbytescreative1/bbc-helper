@@ -1,9 +1,17 @@
 <?php
 
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 if ( class_exists( 'GFCommon' ) ) {
 
     // add UTM fields
     function bbc_create_utm_fields_shortcode() {
+
+        // only users who can edit forms may trigger form updates
+        if ( ! GFCommon::current_user_can_any( 'gravityforms_edit_forms' ) ) {
+            return '';
+        }
 
         // get all forms
         $forms_list = GFAPI::get_forms();
@@ -22,9 +30,11 @@ if ( class_exists( 'GFCommon' ) ) {
 
                 $new_form_fields = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_gclid'];
 
+                $form_updated = false;
+
                 // add new fields
                 foreach ( $new_form_fields as $new_form_field ) {
-                    if ( $new_form_field ) {
+                    if ( $new_form_field && ! in_array($new_form_field, $form_fields) ) {
                         $new_field_id = 0;
                         foreach( $form['fields'] as $field ) {
                             if( $field->id > $new_field_id ) {
@@ -32,16 +42,19 @@ if ( class_exists( 'GFCommon' ) ) {
                             }
                         }
                         $new_field_id++;
-                        $properties['type'] = 'hidden';
+                        $properties = array( 'type' => 'hidden' );
                         $field = GF_Fields::create( $properties );
                         $field->id = $new_field_id;
                         $field->label = $new_form_field;
                         $field->defaultValue = $new_form_field;
                         $form['fields'][] = $field;
-                        if ( ! in_array($new_form_field, $form_fields) ) {
-                            GFAPI::update_form( $form );
-                        }
+                        $form_updated = true;
                     }
+                }
+
+                // only save if fields were added
+                if ( $form_updated ) {
+                    GFAPI::update_form( $form );
                 }
 
             }
@@ -82,9 +95,9 @@ if ( class_exists( 'GFCommon' ) ) {
                     expires = "; expires=" + date.toUTCString();
                 }
 
-                let sameSite = " SameSite=None; ";
+                let secure = window.location.protocol === 'https:' ? "; Secure" : "";
 
-                document.cookie = name + "=" + (value || "") + expires + sameSite + "; path=/";
+                document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=/; SameSite=Lax" + secure;
             }
 
             function storeUtmParameters() {
@@ -392,8 +405,25 @@ if ( class_exists( 'GFCommon' ) ) {
     add_shortcode( 'bbc_populate_utm', 'bbc_populate_utm_shortcode' );
 
     function bbc_gf_editor_access() {
+
+        // roles are stored in the database, so only run once per caps version
+        if ( get_option( 'bbc_gf_editor_caps_version' ) === '1.5.2' ) {
+            return;
+        }
+
         $role = get_role( 'editor' );
-        $role->add_cap( 'gform_full_access' );
+        if ( ! $role ) {
+            return;
+        }
+
+        // replace full access (settings, add-ons, uninstall) with form and entry caps
+        $role->remove_cap( 'gform_full_access' );
+        foreach ( bbc_gf_editor_caps() as $cap ) {
+            $role->add_cap( $cap );
+        }
+
+        update_option( 'bbc_gf_editor_caps_version', '1.5.2' );
+
     }
     add_action( 'admin_init', 'bbc_gf_editor_access' );
 

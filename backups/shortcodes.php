@@ -1,5 +1,8 @@
 <?php
 
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 // get bbc attribution
 if ( ! function_exists('bbc_attribution_shortcode') ) {
     function bbc_attribution_shortcode($atts) {
@@ -7,7 +10,7 @@ if ( ! function_exists('bbc_attribution_shortcode') ) {
             'classes' => false,
         );
         $link = shortcode_atts($default, $atts);
-        return 'Website by <a class="'. $link['classes'] .'" href="https://www.brainbytescreative.com/" target="_blank">Brain Bytes Creative</a>';
+        return 'Website by <a class="'. esc_attr($link['classes']) .'" href="https://www.brainbytescreative.com/" target="_blank">Brain Bytes Creative</a>';
     }
     add_shortcode( 'bbc_attribution', 'bbc_attribution_shortcode' );
 }

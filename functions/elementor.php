@@ -12,7 +12,7 @@ if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
       'menu_title'    => 'Elementor Styles',
       'menu_slug'     => 'elementor_options',
       'post_id' 		=> 'elementor_options',
-      'capability'    => 'edit_posts',
+      'capability'    => 'edit_others_posts',
       'redirect'      => false,
       'icon_url' => 'dashicons-welcome-widgets-menus',
       'position' => 59,
@@ -27,8 +27,8 @@ if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
     // enqueue custom stylesheet and scripts
     add_action( 'wp_enqueue_scripts', 'bbc_elementor_css_js' , 100 );
     function bbc_elementor_css_js() {
-      wp_enqueue_style( 'bbc_elementor_style', plugin_dir_url('bbc-helper/css/') . 'css/bbc-elementor.css', array(), PLUGIN_VERSION );
-      //wp_enqueue_script( 'bbc_elementor_scripts', plugin_dir_url('bbc-helper/js/') . 'js/bbc-elementor.js', array(), PLUGIN_VERSION );
+      wp_enqueue_style( 'bbc_elementor_style', plugin_dir_url('bbc-helper/css/') . 'css/bbc-elementor.css', array(), BBC_HELPER_VERSION );
+      //wp_enqueue_script( 'bbc_elementor_scripts', plugin_dir_url('bbc-helper/js/') . 'js/bbc-elementor.js', array(), BBC_HELPER_VERSION );
     }
 
     // add dynamic styles to head
@@ -36,17 +36,17 @@ if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
     function bbc_add_elementor_root_styles(){
 
       // get default container padding
-      $container_padding = get_field('container_padding', 'elementor_options');
-      $container_padding_tablet = get_field('container_padding_tablet', 'elementor_options');
-      $container_padding_mobile = get_field('container_padding_mobile', 'elementor_options');
+      $container_padding = (float) get_field('container_padding', 'elementor_options');
+      $container_padding_tablet = (float) get_field('container_padding_tablet', 'elementor_options');
+      $container_padding_mobile = (float) get_field('container_padding_mobile', 'elementor_options');
 
       // get header heights
-      $header_height = get_field('header_height', 'elementor_options');
-      $header_height_tablet = get_field('header_height_tablet', 'elementor_options');
-      $header_height_mobile = get_field('header_height_mobile', 'elementor_options');
+      $header_height = (float) get_field('header_height', 'elementor_options');
+      $header_height_tablet = (float) get_field('header_height_tablet', 'elementor_options');
+      $header_height_mobile = (float) get_field('header_height_mobile', 'elementor_options');
 
       // calculate bottom mobile menu height
-      $bottom_mobile_menu_height = get_field('bottom_mobile_menu_height', 'elementor_options');
+      $bottom_mobile_menu_height = (float) get_field('bottom_mobile_menu_height', 'elementor_options');
       if ( $bottom_mobile_menu_height && $header_height_mobile ) {
         $header_height_mobile = $header_height_mobile + $bottom_mobile_menu_height;
       }
