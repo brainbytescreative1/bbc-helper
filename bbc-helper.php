@@ -4,13 +4,13 @@
  *
  * @package       BBC Helper
  * @author        Brain Bytes Creative
- * @version       1.5.1
+ * @version       1.5.3
  *
  * @wordpress-plugin
  * Plugin Name:   BBC Helper
  * Plugin URI:    https://www.brainbytescreative.com/
  * Description:   Helper plugin for BBC websites
- * Version:       1.5.1
+ * Version:       1.5.3
  * Author:        Brain Bytes Creative
  * Author URI:    https://www.brainbytescreative.com/
  * Text Domain:   bbc-helper
@@ -22,12 +22,15 @@
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define('PLUGIN_VERSION', '1.5.1');
+if ( ! defined('BBC_HELPER_VERSION') ) {
+    define('BBC_HELPER_VERSION', '1.5.3');
+}
 
 // acf load functions
 if ( class_exists('acf') ) {
 
-    $site_name = get_bloginfo( 'name' );
+    // only the local starter site that pushes to Github saves field groups into the plugin
+    $bbc_is_starter_site = ( wp_get_environment_type() === 'local' && get_bloginfo( 'name' ) === 'Pico Starter Site' );
 
     // load json
     if ( ! function_exists('bbc_acf_json_load_point') ) {
@@ -45,7 +48,7 @@ if ( class_exists('acf') ) {
             return plugin_dir_path( __FILE__ ) . 'acf-json';
         }
         // only save if local site that pushes to Github
-        if ( $site_name === 'Pico Starter Site' ) {
+        if ( $bbc_is_starter_site ) {
             add_filter( 'acf/settings/save_json', 'bbc_acf_json_save_point' );
         }
     }
@@ -65,7 +68,7 @@ if ( class_exists('acf') ) {
             return plugin_dir_path( __FILE__ ) . '/acfe-php';
         }
         // only save if local site that pushes to Github
-        if ( $site_name === 'Pico Starter Site' ) {
+        if ( $bbc_is_starter_site ) {
             add_filter('acfe/settings/php_save', 'bbc_acfe_php_save_point');
         }
     }
@@ -99,4 +102,36 @@ if ( ! function_exists('bbc_helper_theme_functions') ) {
         }
     }
     add_action( 'init', 'bbc_helper_theme_functions' );
+}
+
+// Gravity Forms capabilities editors need to manage forms and entries
+if ( ! function_exists('bbc_gf_editor_caps') ) {
+    function bbc_gf_editor_caps(){
+        return array(
+            'gravityforms_create_form',
+            'gravityforms_edit_forms',
+            'gravityforms_delete_forms',
+            'gravityforms_preview_forms',
+            'gravityforms_view_entries',
+            'gravityforms_edit_entries',
+            'gravityforms_delete_entries',
+            'gravityforms_export_entries',
+            'gravityforms_view_entry_notes',
+            'gravityforms_edit_entry_notes',
+        );
+    }
+}
+
+// remove the Gravity Forms capabilities granted to editors
+if ( ! function_exists('bbc_helper_deactivate') ) {
+    function bbc_helper_deactivate(){
+        $role = get_role( 'editor' );
+        if ( $role ) {
+            foreach ( bbc_gf_editor_caps() as $cap ) {
+                $role->remove_cap( $cap );
+            }
+        }
+        delete_option( 'bbc_gf_editor_caps_version' );
+    }
+    register_deactivation_hook( __FILE__, 'bbc_helper_deactivate' );
 }
