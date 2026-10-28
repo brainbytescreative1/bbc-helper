@@ -104,6 +104,11 @@ if ( ! function_exists('bbc_helper_theme_functions') ) {
     add_action( 'init', 'bbc_helper_theme_functions' );
 }
 
+// bump when bbc_gf_editor_caps() changes so editor roles are updated again
+if ( ! defined('BBC_GF_EDITOR_CAPS_VERSION') ) {
+    define('BBC_GF_EDITOR_CAPS_VERSION', '1.5.2');
+}
+
 // Gravity Forms capabilities editors need to manage forms and entries
 if ( ! function_exists('bbc_gf_editor_caps') ) {
     function bbc_gf_editor_caps(){

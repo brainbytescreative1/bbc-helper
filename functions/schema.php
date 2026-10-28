@@ -56,6 +56,28 @@ if ( class_exists('acf') ) {
 
     }
 
+    // get the page/post whose schema settings apply to the current request
+    function bbc_get_schema_post_id() {
+
+        if ( is_singular() ) {
+            return get_queried_object_id();
+        }
+
+        // static posts page (is_home() is not singular)
+        if ( is_home() && ! is_front_page() ) {
+            return (int) get_option( 'page_for_posts' );
+        }
+
+        // WooCommerce shop page (a post type archive, not singular)
+        if ( function_exists('is_shop') && function_exists('wc_get_page_id') && is_shop() ) {
+            $shop_page_id = (int) wc_get_page_id( 'shop' );
+            return $shop_page_id > 0 ? $shop_page_id : 0;
+        }
+
+        return 0;
+
+    }
+
     // get schema function
     function bbc_get_schema($field = false, $type = false) {
 
@@ -149,8 +171,9 @@ if ( class_exists('acf') ) {
             bbc_get_schema( get_field('schema_repeater', 'schema'), 'global' );
 
             // post schema
-            if ( is_singular() ) {
-                bbc_get_schema( get_field('post_schema_repeater', get_queried_object_id()), 'post' );
+            $schema_post_id = bbc_get_schema_post_id();
+            if ( $schema_post_id ) {
+                bbc_get_schema( get_field('post_schema_repeater', $schema_post_id), 'post' );
             }
         }
     }
@@ -167,6 +190,48 @@ if ( class_exists('acf') ) {
             'icon_url' => 'dashicons-admin-site-alt3',
             'position' => 98,
         ));
+    }
+
+    // reject invalid pasted schema when saving
+    if ( ! function_exists('bbc_validate_pasted_schema') ) {
+        function bbc_validate_pasted_schema( $valid, $value ) {
+
+            if ( $valid !== true || ! is_string($value) || trim($value) === '' ) {
+                return $valid;
+            }
+
+            // posted values may or may not be slashed depending on the ACF version, so accept either
+            if ( ! bbc_prepare_schema_json($value) && ! bbc_prepare_schema_json( wp_unslash($value) ) ) {
+                return 'Schema is not valid JSON, so it would be skipped on the site. Check for trailing commas, comments or more than one script block.';
+            }
+
+            return $valid;
+
+        }
+        add_filter( 'acf/validate_value/name=paste_schema_code', 'bbc_validate_pasted_schema', 10, 2 );
+    }
+
+    // reject invalid uploaded schema files when saving
+    if ( ! function_exists('bbc_validate_uploaded_schema') ) {
+        function bbc_validate_uploaded_schema( $valid, $value ) {
+
+            if ( $valid !== true || ! $value || ! is_numeric($value) ) {
+                return $valid;
+            }
+
+            $file = array(
+                'ID'  => (int) $value,
+                'url' => wp_get_attachment_url( (int) $value ),
+            );
+
+            if ( ! bbc_prepare_schema_json( bbc_get_schema_file_contents($file) ) ) {
+                return 'Schema file is not valid JSON, so it would be skipped on the site.';
+            }
+
+            return $valid;
+
+        }
+        add_filter( 'acf/validate_value/name=upload_schema_json', 'bbc_validate_uploaded_schema', 10, 2 );
     }
 
     // allow json file uploads
@@ -186,7 +251,8 @@ if ( class_exists('acf') ) {
         function bbc_disable_yoast_schema_on_specific_pages( $data ) {
 
             // if the current page/post has default schema disabled
-            if ( is_singular() && get_post_meta( get_queried_object_id(), 'default_schema', true ) === 'disable' ) {
+            $schema_post_id = bbc_get_schema_post_id();
+            if ( $schema_post_id && get_post_meta( $schema_post_id, 'default_schema', true ) === 'disable' ) {
                 return false;
             }
 

@@ -101,7 +101,7 @@ if ( class_exists( 'GFCommon' ) ) {
             }
 
             function storeUtmParameters() {
-                let utmParams = ['utm_id', 'utm_source', 'utm_medium', 'utm_name', 'utm_term', 'utm_campaign', 'utm_content', 'utm_gclid'];
+                let utmParams = ['utm_id', 'utm_source', 'utm_medium', 'utm_name', 'utm_term', 'utm_campaign', 'utm_content', 'gclid'];
                 let eventData = {};
                 for (let i = 0; i < utmParams.length; i++) {
                     let paramValue = getQueryParam(window.location.href, utmParams[i]);
@@ -407,7 +407,7 @@ if ( class_exists( 'GFCommon' ) ) {
     function bbc_gf_editor_access() {
 
         // roles are stored in the database, so only run once per caps version
-        if ( get_option( 'bbc_gf_editor_caps_version' ) === '1.5.2' ) {
+        if ( get_option( 'bbc_gf_editor_caps_version' ) === BBC_GF_EDITOR_CAPS_VERSION ) {
             return;
         }
 
@@ -422,7 +422,7 @@ if ( class_exists( 'GFCommon' ) ) {
             $role->add_cap( $cap );
         }
 
-        update_option( 'bbc_gf_editor_caps_version', '1.5.2' );
+        update_option( 'bbc_gf_editor_caps_version', BBC_GF_EDITOR_CAPS_VERSION );
 
     }
     add_action( 'admin_init', 'bbc_gf_editor_access' );
